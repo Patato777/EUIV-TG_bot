@@ -40,13 +40,14 @@ class CheckNewComments:
         soup = BeautifulSoup(comments['comments_html'], 'lxml')
         all_comms = soup.find_all(class_="commentthread_comment responsive_body_text")
         timestamp = time.time()
-        while timestamp > comments['timelastpost']:
+        while timestamp > self.lastpost['timelastpost']:
             comment = all_comms.pop(0)
             timestamp = int(comment.span.attrs['data-timestamp'])
-            await self.new_comment(comment)
-            if all_comms == list():
-                all_comms = self.next_page()
-                comments['start'] = comments['start'] + comments['pagesize']
+            if timestamp > self.lastpost['timelastpost']:
+                await self.new_comment(comment)
+                if all_comms == list():
+                    all_comms = self.next_page()
+                    comments['start'] = comments['start'] + comments['pagesize']
         with open('lastpost', 'w') as f:
             f.write(str(comments))
         self.lastpost = comments
@@ -66,6 +67,7 @@ class CheckNewComments:
 
 bot = discord.Client()
 scheduler = AsyncIOScheduler()
+scheduler.start()
 
 
 async def check_page():
