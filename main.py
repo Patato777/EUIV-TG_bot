@@ -73,6 +73,11 @@ scheduler.start()
 async def check_page():
     check = CheckNewComments(bot)
     await check.check_page()
+    
+
+@bot.event
+async def on_ready():
+    await check_page()
 
 
 with open('token', 'r') as tok:
