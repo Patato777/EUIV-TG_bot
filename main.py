@@ -14,7 +14,7 @@ class CheckNewComments:
 
     def __init__(self, bot):
         self.bot = bot
-        with open('lastpost', 'r') as f:
+        with open('lastpost', 'r', encoding='utf-8') as f:
             self.lastpost = eval(f.read())
         self.start = self.lastpost['start']
         self.pagesize = self.lastpost['pagesize']
@@ -48,7 +48,7 @@ class CheckNewComments:
                 if all_comms == list():
                     all_comms = self.next_page()
                     comments['start'] = comments['start'] + comments['pagesize']
-        with open('lastpost', 'w') as f:
+        with open('lastpost', 'w', encoding='utf-8') as f:
             f.write(str(comments))
         self.lastpost = comments
 
